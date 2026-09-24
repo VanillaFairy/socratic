@@ -1,7 +1,7 @@
 {
   "name": "socratic",
-  "description": "Adversarial two-agent debate as a decision aid: two deliberately differentiated debaters pin terminology, clash until consensus, stall or loop, and the moderator translates the outcome into a plain recommendation. /socratic starts a debate; /socratic-continue feeds the last one a new point.",
-  "version": "1.0.0",
+  "description": "Adversarial N-agent debate as a decision aid: 2–5 deliberately differentiated debaters pin terminology, clash until unanimous consensus, stall or loop, and the moderator translates the outcome into a plain recommendation. /socratic starts a debate; /socratic-continue feeds the last one a new point.",
+  "version": "1.1.0",
   "author": {
     "name": "VanillaFairy"
   },
