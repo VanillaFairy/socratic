@@ -19,6 +19,13 @@ The plugin is standalone. It reads no project state and writes no files.
 /plugin install socratic@vanillafairy
 ```
 
+Or standalone, from this repo's own marketplace:
+
+```
+/plugin marketplace add C:\work\claude\vanillafairy\socratic
+/plugin install socratic@socratic-dev
+```
+
 ## Usage example
 
 ```
