@@ -15,15 +15,8 @@ The plugin is standalone. It reads no project state and writes no files.
 ## Install
 
 ```
-/plugin marketplace add https://github.com/VanillaFairy/socratic
-/plugin install socratic@vanillafairy
-```
-
-Or standalone, from this repo's own marketplace:
-
-```
-/plugin marketplace add C:\work\claude\vanillafairy\socratic
-/plugin install socratic@socratic-dev
+/plugin marketplace add VanillaFairy/socratic
+/plugin install socratic@socratic
 ```
 
 ## Usage example

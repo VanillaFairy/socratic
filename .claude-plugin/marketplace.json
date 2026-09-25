@@ -1,9 +1,11 @@
 {
-  "name": "socratic-dev",
-  "description": "Development marketplace for the socratic debate plugin",
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "socratic",
   "owner": {
-    "name": "VanillaFairy"
+    "name": "VanillaFairy",
+    "url": "https://github.com/VanillaFairy"
   },
+  "description": "Install socratic as a Claude plugin.",
   "plugins": [
     {
       "name": "socratic",
