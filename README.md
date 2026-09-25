@@ -15,8 +15,8 @@ The plugin is standalone. It reads no project state and writes no files.
 ## Install
 
 ```
-/plugin marketplace add VanillaFairy/socratic
-/plugin install socratic@socratic
+/plugin marketplace add VanillaFairy/agentic-plugins
+/plugin install socratic@vanillafairy
 ```
 
 ## Usage example
