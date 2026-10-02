@@ -7,7 +7,7 @@ adversarial debate between 2 to 5 agents and returns a plain-language recommenda
 
 | Piece | What it does |
 |---|---|
-| `skills/socratic` | `/socratic <question>` picks the number of debaters from the question: one advocate per real option, or one per distinct lens (`--n K` overrides). It spawns them with different stances, relays their turns until consensus, stall or loop, and translates the outcome. |
+| `skills/socratic` | `/socratic <question>` picks the number of debaters from the question: one advocate per real option, or one per distinct lens (`--n K` overrides). It spawns them with different stances, relays their turns until consensus, stall, exhaustion, loop or the round cap, and translates the outcome. |
 | `skills/socratic-continue` | `/socratic-continue <point>` gives a new idea or objection to the debaters from the last `/socratic` run and translates the outcome again. In a later session it rebuilds them from the run's log. |
 
 The plugin is standalone. It reads no project state. The only files it writes are its debate

@@ -1,6 +1,6 @@
 ---
 name: socratic
-description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED debaters (one model, or mixed model families where the host offers them) — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, or loop, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and keeps a log of each debate under ~/.socratic/runs/.
+description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED debaters (one model, or mixed model families where the host offers them) — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, exhaustion, loop or the round cap, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and keeps a log of each debate under ~/.socratic/runs/.
 ---
 
 # socratic — adversarial debate as a decision aid
@@ -11,8 +11,9 @@ debater. You pick N, differentiate the debaters, spawn them, relay their turns, 
 condition, and translate the outcome into human-readable prose. Everything the debaters say is
 dense machine-shorthand optimized for tokens — *you* are the only translator to the human.
 
-**Announce at start:** "Using socratic — running an adversarial N-agent debate on <question>,
-then translating the outcome." (Say the actual N.)
+**Announce once the debate is going ahead** (the plan card accepted, or `--yes` with a passed
+gate): "Using socratic — running an adversarial N-agent debate on <question>, then translating the
+outcome." (Say the actual N.)
 
 ## What this is / is not
 
@@ -202,12 +203,12 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 ## 4. Run the debate loop
 
 **The log.** Before spawning, create the run directory
-`<home>/.socratic/runs/<YYYY-MM-DD>-<slug>/`: `<home>` is the user's home directory as an absolute
+`<home>/.socratic/runs/<YYYY-MM-DD>-<slug>/` and its `rounds/` subdirectory. `<home>` is the user's home directory as an absolute
 path, `<slug>` a few kebab-case words from the question, with `-2`, `-3` added on a name clash.
 Write `debate.md` there with the question sentence, the mechanism, and for each debater its name,
 its STANCE fill and its model. Fill `{{RUN}}` in every brief with the directory's absolute path.
 Every message you send a debater opens with `ROUND <RR>` (`00` for the opening), so each one writes
-its message to `rounds/<RR>-<name>.txt` as the debate runs. At the end, append the outcome tag and
+its message to `rounds/<RR>-<short name>.txt` (`00-alpha.txt`) as the debate runs. At the end, append the outcome tag and
 the synthesis to `debate.md`.
 
 **Round 0 — differentiated & independent.** In a single message, spawn all N debaters
@@ -312,7 +313,7 @@ term was pinned — say so plainly and early; a resolved equivocation is usually
 useful thing the human can take away.
 
 **Length cap.** On consensus, Verdict + Pro + Contra together stay within **150 words**. On no
-consensus, the four parts stay within **250 words**. The outcome tag and transcript don't count.
+consensus, the four parts stay within **250 words**. The outcome tag and log line don't count.
 When it won't fit, cut the weaker arguments, never the caveats.
 
 **On consensus — show only these three:**
@@ -351,7 +352,7 @@ the evidence. Don't restate the recommendation separately from the verdict.
 ## 9. Failure handling
 
 - **A debater returns nothing / dies** — resend once (`SendMessage`, or re-spawn with its own
-  prior `POS:` + STANCE + the transcript so far so continuity and differentiation are preserved).
+  brief, STANCE and model plus a note to read `{{RUN}}/rounds/` so continuity and differentiation are preserved).
   If it still fails, continue with the surviving debaters, mark it failed in `debate.md`, and
   **say so** in the synthesis; its stance is unrepresented from that round on. If only one debater survives, stop the clash and
   report its view as a single voice, not a debate. If all fail, fall back to a single direct answer
