@@ -235,12 +235,15 @@ work." Read the tags, then confirm the *meaning*, not just the words.
 **Count with the ledger, judge the meaning yourself.** After every round, run
 `node <this skill's base directory>/scripts/ledger.mjs <run dir>`. It reads the round files and
 prints, as JSON: the round and whether the cap is reached, each debater's `POS:`, who wrote `HOLD:`,
-how many new claims each raised (`exhausted` when none did), exact repeats of earlier claims, open
+how many new claims each raised (`nothingNew` when none did), exact repeats of earlier claims, open
 `ASK@`s with the debaters they still wait on, and the `ARG[F]` and `ARG[A]` lists for the closing
 round. Those counts are facts; don't recount them by eye. What they can't see is yours: a
 paraphrased repeat is a loop the ledger misses, a new-looking line can restate an old claim, and
 matching `POS:` words can hide different reasons. Without `node`, or without a log, keep the same
 tally by hand.
+
+Check **consensus first**. Stall, exhausted and loop apply only while positions still differ: a
+round that adds nothing new because everyone now agrees is consensus, not exhaustion.
 
 - **Consensus — unanimity only.** Every `POS:` asserts the **same recommendation for the same core
   reasons**, and no debater holds an open, unrebutted `OBJ@` or an open, unanswered `ASK@`. A

@@ -83,7 +83,7 @@ export function ledger(messages, cap = 6) {
     holds,
     allHold: holds.length === debaters.length,
     newClaims,
-    exhausted: round > 0 && totalNew === 0,
+    nothingNew: round > 0 && totalNew === 0,
     repeats,
     openAsks,
     facts: byProvenance('F'),

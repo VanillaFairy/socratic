@@ -29,14 +29,14 @@ test('an ASK@all waits on every other live debater', () => {
   assert.deepEqual(r.openAsks.map((a) => a.waitingOn), [['gamma']]);
 });
 
-test('a round of restated claims is exhausted; one new claim is not; round 0 never is', () => {
+test('a round of restated claims has nothing new; one new claim does; round 0 always does', () => {
   const opening = [msg(0, 'alpha', 'POS: x', 'ARG[F]: pg skip locked ok'), msg(0, 'beta', 'POS: y', 'OBJ@alpha: aof loses 1s')];
-  assert.equal(ledger(opening).exhausted, false);
+  assert.equal(ledger(opening).nothingNew, false);
   const restated = [msg(1, 'alpha', 'POS: x', 'ARG[I]: PG  skip locked OK'), msg(1, 'beta', 'POS: y', 'OBJ@alpha: aof loses 1s')];
-  assert.equal(ledger([...opening, ...restated]).exhausted, true);
+  assert.equal(ledger([...opening, ...restated]).nothingNew, true);
   const fresh = [restated[0], msg(1, 'beta', 'POS: y', 'OBJ@alpha: ops wants one db')];
   const r = ledger([...opening, ...fresh]);
-  assert.equal(r.exhausted, false);
+  assert.equal(r.nothingNew, false);
   assert.deepEqual(r.newClaims, { alpha: 0, beta: 1 });
 });
 
