@@ -352,8 +352,8 @@ the evidence. Don't restate the recommendation separately from the verdict.
 
 - **A debater returns nothing / dies** — resend once (`SendMessage`, or re-spawn with its own
   prior `POS:` + STANCE + the transcript so far so continuity and differentiation are preserved).
-  If it still fails, continue with the surviving debaters and **say so** in the synthesis; its
-  stance is unrepresented from that round on. If only one debater survives, stop the clash and
+  If it still fails, continue with the surviving debaters, mark it failed in `debate.md`, and
+  **say so** in the synthesis; its stance is unrepresented from that round on. If only one debater survives, stop the clash and
   report its view as a single voice, not a debate. If all fail, fall back to a single direct answer
   explicitly labeled "the debate did not run." Never fake a debate.
 - **A log write fails** (permission denied, no home directory) — write that round file yourself

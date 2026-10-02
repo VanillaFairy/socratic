@@ -5,11 +5,12 @@ description: Use when the user invokes /socratic-continue — resume the MOST RE
 
 # socratic-continue — throw a new bone into the last debate
 
-Resume the **most recent `socratic` debate in the current session** with the **same
-debaters** (all N of them), feeding them a new idea the user wants chewed on. You are still the **moderator**:
-neutral, never a debater. The debaters already hold their full brief, their assigned `STANCE`, and
-the entire prior transcript in context — you inject only the *new* point, run more rounds, judge
-the stop condition again, and re-translate the delta into human-readable prose.
+Resume the **most recent `socratic` debate** with the **same debaters** (all N of them), feeding
+them a new idea the user wants chewed on. You are still the **moderator**: neutral, never a
+debater. Live debaters already hold their full brief, their assigned `STANCE`, and the entire
+prior transcript in context; rebuilt ones get the brief at spawn and read the transcript from the
+log. Either way you inject only the *new* point, run more rounds, judge the stop condition again,
+and re-translate the delta into human-readable prose.
 
 This is the **continuation** counterpart to `socratic`. `/socratic` starts a fresh debate;
 `/socratic-continue` extends the last one. Everything the debaters say stays dense
@@ -59,18 +60,19 @@ one, and the continuation's result is appended to the same `debate.md` under
 
 **Rebuild from the log** when no `socratic` debate ran in this session, the handles are
 unrecoverable, or the user names an older run. Take the newest run under `<home>/.socratic/runs/`
-unless the user names one. Re-spawn each debater listed in `debate.md` exactly as `socratic` §3
-spawns it, with the same brief, STANCE, model and `{{RUN}}`, and open its first message with:
-`REBUILT. All earlier rounds are in {{RUN}}/rounds/. Read every one, then answer the new point
-below as the analyst you were.` Announce it as a rebuilt continuation, not a resumed one.
+unless the user names one. Re-spawn each debater listed in `debate.md`, except those it records
+as failed, exactly as `socratic` §3 spawns it, with the same brief, STANCE, model and `{{RUN}}`.
+Its spawn message is the injection of §3 with one line added after `ROUND <RR>`: `REBUILT. All
+earlier rounds are in {{RUN}}/rounds/. Read every one, then answer the new point below as the
+analyst you were.` Announce it as a rebuilt continuation, not a resumed one.
 
 **If there is no log either**, **stop and say so plainly**, then offer to start a fresh
 `/socratic` on the question instead. Never silently spin up new agents and pass it off as a
 continuation (that is a fabricated debate — see §5 and `socratic` §9).
 
-A resumed background agent that has gone idle is still reachable: `SendMessage` resumes it **from
-its transcript** with full prior context. "Idle" ≠ "gone." Only a genuinely lost handle (or a new
-session) blocks resumption.
+A background agent that has gone idle, or that `socratic` §7 stopped, may still resume from its
+transcript on `SendMessage`. Try it. If any debater's handle doesn't resume, rebuild the whole
+panel from the log rather than mix live and rebuilt debaters.
 
 ## 3. Inject the new point as a moderator turn
 
@@ -105,7 +107,8 @@ new advances, stop.
 Once a stop condition fires, run the closing round of `socratic` §6 on the load-bearing claims this
 continuation introduced or changed. Claims verified in an earlier run stay verified.
 
-Run the ledger of `socratic` §5 after every round with `--cap <injection round + 4>`.
+After every round, run the ledger of `socratic` §5, which lives in that skill, not this one:
+`node <this skill's base directory>/../socratic/scripts/ledger.mjs <run dir> --cap <injection round + 4>`.
 
 **Continuation cap: ≤ 4 clash rounds per injection** (a single new idea rarely needs more; a full
 debate is what `socratic` is for). Reaching the cap is a *no-consensus* outcome — report it as
