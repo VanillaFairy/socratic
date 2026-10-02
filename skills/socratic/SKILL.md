@@ -1,6 +1,6 @@
 ---
 name: socratic
-description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED debaters (one model, or mixed model families where the host offers them) — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, or loop, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and writes no artifacts.
+description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED debaters (one model, or mixed model families where the host offers them) — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, or loop, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and keeps a log of each debate under ~/.socratic/runs/.
 ---
 
 # socratic — adversarial debate as a decision aid
@@ -17,8 +17,10 @@ then translating the outcome." (Say the actual N.)
 ## What this is / is not
 
 - **Standalone.** No dependency on any plugin, no config, no `.reasonable/` state. Reads no
-  project files itself and writes **no** artifacts. Works in any repo or none.
-- **Advisory.** The debaters are read-only analysts. Nothing here mutates code, files, or state.
+  project files itself. Writes only its own debate log, under `~/.socratic/runs/`. Works in any
+  repo or none.
+- **Advisory.** The debaters are read-only analysts, apart from their own log files. Nothing here
+  mutates code or project state.
 - **A reasoning amplifier, not an executor.** The deliverable is a reasoned recommendation.
 
 ---
@@ -106,8 +108,9 @@ Name the debaters in order `socratic-alpha`, `socratic-beta`, `socratic-gamma`, 
 `socratic-epsilon`, taking the first N. Spawn each with the `Agent` tool,
 `subagent_type: "general-purpose"`, its model per §2 (the `model` override omitted when the host
 offers one family, so each inherits yours), its stable `name`, and `run_in_background: true` so it can be
-resumed via `SendMessage`. The brief below is shared **except the `{{N}}`, `{{SELF}}`, `{{OTHERS}}`
-and `STANCE` fills**, which you set per debater per §2:
+resumed via `SendMessage`. The brief below is shared **except the `{{N}}`, `{{SELF}}`, `{{OTHERS}}`,
+`{{RUN}}` and `STANCE` fills**, which you set per debater per §2 and §4. `{{SELF}}` and `{{OTHERS}}`
+take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 
 - Advocacy → `STANCE: You are assigned to champion **<that debater's option>**. Build its
   strongest honest case; expose the weakest points of the alternatives.`
@@ -144,9 +147,11 @@ and `STANCE` fills**, which you set per debater per §2:
 > wastes the debate. When genuinely unsure in a gray area, **`ASK@` rather than guess** — a
 > well-placed question beats a confident misfire.
 >
-> **You are strictly READ-ONLY.** You may Read / Grep / Glob to ground claims in real code. You
-> must NOT Edit, Write, or run any mutating command. Ground factual claims in `path:line`; don't
-> hand-wave about code you can just read.
+> **You are READ-ONLY, except for your own log file.** You may Read / Grep / Glob to ground claims
+> in real code. Each turn, write exactly the message you return to
+> `{{RUN}}/rounds/<RR>-{{SELF}}.txt`, where RR is the two-digit round number the moderator gives
+> you. You must NOT Edit or Write anything else, or run any mutating command. Ground factual claims
+> in `path:line`; don't hand-wave about code you can just read.
 >
 > **Talk in dense machine-shorthand. No human reads your messages — the moderator translates the
 > final outcome.** Maximize decision-relevant information per token:
@@ -192,6 +197,15 @@ and `STANCE` fills**, which you set per debater per §2:
 > `REVISE:` your POS if it moved, restate `POS:`. If nothing new: `HOLD:`.
 
 ## 4. Run the debate loop
+
+**The log.** Before spawning, create the run directory
+`<home>/.socratic/runs/<YYYY-MM-DD>-<slug>/`: `<home>` is the user's home directory as an absolute
+path, `<slug>` a few kebab-case words from the question, with `-2`, `-3` added on a name clash.
+Write `debate.md` there with the question sentence, the mechanism, and for each debater its name,
+its STANCE fill and its model. Fill `{{RUN}}` in every brief with the directory's absolute path.
+Every message you send a debater opens with `ROUND <RR>` (`00` for the opening), so each one writes
+its message to `rounds/<RR>-<name>.txt` as the debate runs. At the end, append the outcome tag and
+the synthesis to `debate.md`.
 
 **Round 0 — differentiated & independent.** In a single message, spawn all N debaters
 (background, named, model per §2), each with the one-sentence question + the brief + **its own**
@@ -309,8 +323,9 @@ the evidence. Don't restate the recommendation separately from the verdict.
 - **Outcome tag** — how it ended (`consensus` / `stall` / `exhausted` / `loop` / `cap`), round count, N, and the
   divergence mechanism used (`advocacy` / `lenses`). Name any options dropped by the N ≤ 5 cap,
   and each debater's model when they differ.
-- **Transcript** — the raw dense exchange, folded/collapsed at the end for audit, **untranslated**
-  (translating it back would spend the tokens the density just saved). Offer to expand on request.
+- **Log** — the path of the run directory, which holds the raw dense exchange round by round.
+  Don't paste the transcript into chat (repeating it would spend the tokens the density just
+  saved); offer to translate any part of it on request.
 
 ## 9. Failure handling
 
@@ -320,6 +335,9 @@ the evidence. Don't restate the recommendation separately from the verdict.
   stance is unrepresented from that round on. If only one debater survives, stop the clash and
   report its view as a single voice, not a debate. If all fail, fall back to a single direct answer
   explicitly labeled "the debate did not run." Never fake a debate.
+- **A log write fails** (permission denied, no home directory) — write that round file yourself
+  from the debater's reply. If that fails too, carry on without the log and say so in the outcome
+  tag. The debate never stops over its log.
 - **Never fabricate consensus.** If the cap is hit or the debate stalls, report exactly that.
 - **Always** `TaskStop` every debater before finishing, including on failure paths.
 

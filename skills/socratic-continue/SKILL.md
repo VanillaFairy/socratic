@@ -1,6 +1,6 @@
 ---
 name: socratic-continue
-description: Use when the user invokes /socratic-continue — resume the MOST RECENT /socratic debate in the current session with the SAME debaters (all N of them), feed them a new idea/point/objection to chew on, run more clash rounds, and re-translate the outcome. Requires a prior /socratic (or /socratic-continue) run earlier in THIS session — the debaters live in the moderator's live agent handles only, so a fresh session with no prior run cannot resume them. A bare /socratic always starts a NEW debate from scratch; use this only to continue an existing one with fresh input.
+description: Use when the user invokes /socratic-continue — resume the MOST RECENT /socratic debate with the SAME debaters (all N of them), feed them a new idea/point/objection to chew on, run more clash rounds, and re-translate the outcome. Within the session that ran the debate it resumes the live debaters; in a later session it rebuilds them from the debate log under ~/.socratic/runs/ and says so. A bare /socratic always starts a NEW debate from scratch; use this only to continue an existing one with fresh input.
 ---
 
 # socratic-continue — throw a new bone into the last debate
@@ -20,17 +20,18 @@ agents against your new point, then re-translating the outcome."
 
 ## What this is / is not
 
-- **Session-scoped.** It resumes agents that exist only as live background handles in *this*
-  session. `socratic` writes no artifacts by design, so there is **no** persisted debater state on
-  disk — once the session ends, the debaters' context is gone and this skill cannot revive them.
-  Honesty about this limit is mandatory (see §5).
-- **Continuation, not restart.** You must resume the SAME debater agents —
+- **Live in-session, rebuilt across sessions.** In the session that ran the debate, the debaters
+  are live background handles with their full context. Once that session ends, the context is
+  gone; what survives is the run's log, `debate.md` plus `rounds/`. From it you rebuild the
+  debaters as fresh agents that read the old transcript (§2). A rebuilt debater has read the
+  debate, not lived it, and you say so (see §5).
+- **Continuation, not restart.** In-session, resume the SAME debater agents —
   `socratic-alpha`, `socratic-beta`, and `socratic-gamma` … `socratic-epsilon` if the run had them —
-  by name or by the `agentId` from their spawn. Re-spawning fresh agents would discard
-  their context and re-collapse the samples into an echo — that is a NEW debate, not a
-  continuation, and defeats the purpose.
-- **Advisory & read-only.** The debaters remain read-only analysts. Nothing here mutates code,
-  files, or state.
+  by name or by the `agentId` from their spawn. Fresh agents without the transcript would
+  re-collapse the samples into an echo — that is a NEW debate, not a continuation, and defeats the
+  purpose.
+- **Advisory & read-only.** The debaters remain read-only analysts, apart from their own log files.
+  Nothing here mutates code or project state.
 
 ---
 
@@ -52,10 +53,20 @@ prior `socratic-continue`) run — its N, their names (`socratic-alpha` onward) 
 `agentId`s, and any debater that had already failed in that run. You will `SendMessage` to those
 exact handles; a debater that failed earlier stays out.
 
-**If you cannot** — no `socratic` debate ran earlier in this session, or the handles are
-unrecoverable — **stop and say so plainly**, then offer to start a fresh `/socratic` on the
-question instead. Never silently spin up new agents and pass it off as a continuation (that is
-a fabricated debate — see §5 and `socratic` §9).
+Recover its run directory too: new rounds go into the same `rounds/`, numbered on from the last
+one, and the continuation's result is appended to the same `debate.md` under
+`## Continuation: <the new point>`.
+
+**Rebuild from the log** when no `socratic` debate ran in this session, the handles are
+unrecoverable, or the user names an older run. Take the newest run under `<home>/.socratic/runs/`
+unless the user names one. Re-spawn each debater listed in `debate.md` exactly as `socratic` §3
+spawns it, with the same brief, STANCE, model and `{{RUN}}`, and open its first message with:
+`REBUILT. All earlier rounds are in {{RUN}}/rounds/. Read every one, then answer the new point
+below as the analyst you were.` Announce it as a rebuilt continuation, not a resumed one.
+
+**If there is no log either**, **stop and say so plainly**, then offer to start a fresh
+`/socratic` on the question instead. Never silently spin up new agents and pass it off as a
+continuation (that is a fabricated debate — see §5 and `socratic` §9).
 
 A resumed background agent that has gone idle is still reachable: `SendMessage` resumes it **from
 its transcript** with full prior context. "Idle" ≠ "gone." Only a genuinely lost handle (or a new
@@ -64,10 +75,10 @@ session) blocks resumption.
 ## 3. Inject the new point as a moderator turn
 
 The debaters already carry the shared brief and the move-tag protocol from the original spawn —
-**do not resend the brief.** In a single message, `SendMessage` to **every** debater with the same
+**do not resend the brief** (a rebuilt debater got it at spawn). In a single message, `SendMessage` to **every** debater with the same
 new point, framed as a moderator injection opening a fresh round:
 
-- Lead with `CONTINUE. Moderator injecting a new consideration from the human. Treat as a fresh
+- Lead with `ROUND <RR>` (the next round number), then `CONTINUE. Moderator injecting a new consideration from the human. Treat as a fresh
   round; respond per protocol (CONCEDE@ / OBJ@ / REVISE / restate POS), or HOLD if genuinely nothing
   new.`
 - Then the new point, in the same **dense shorthand** the debate runs in — one claim per line,
@@ -116,9 +127,10 @@ stays within **150 words** on consensus and **250 words** without it.
 - **My tie-breaking lean** — on no consensus, your own adjudicated call, clearly marked as the
   moderator breaking the tie, never a fabricated agreement.
 - **Outcome tag** — how this continuation ended (`consensus` / `stall` / `exhausted` / `loop` / `cap`), the
-  number of continuation rounds, N, and a note that it was a `continuation` of the prior run.
-- **Transcript** — the raw dense exchange for this continuation, folded at the end, untranslated.
-  Offer to expand on request.
+  number of continuation rounds, N, and a note that it was a `continuation` of the prior run, or a
+  `rebuilt` one.
+- **Log** — the run directory's path. Don't paste the transcript; offer to translate any part of
+  it on request.
 
 ## 6. Cleanup
 
@@ -128,8 +140,8 @@ the desired end state. (They cost nothing while idle and evaporate with the sess
 
 ## 7. Failure handling
 
-- **No prior debate in this session / lost handles** — do not fabricate. Say the last debate can't
-  be resumed (and why: fresh session, or no `socratic` run happened here), then offer a fresh
+- **No live debaters and no log** — do not fabricate. Say the last debate can't be resumed (and
+  why: no `socratic` run happened here, and no run directory exists), then offer a fresh
   `/socratic`.
 - **A debater returns nothing / dies on resume** — resend once. If it still fails, continue with
   the surviving debaters and **say so** in the synthesis; if only one survives, report its view as a

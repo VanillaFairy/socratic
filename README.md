@@ -8,9 +8,20 @@ adversarial debate between 2 to 5 agents and returns a plain-language recommenda
 | Piece | What it does |
 |---|---|
 | `skills/socratic` | `/socratic <question>` picks the number of debaters from the question: one advocate per real option, or one per distinct lens (`--n K` overrides). It spawns them with different stances, relays their turns until consensus, stall or loop, and translates the outcome. |
-| `skills/socratic-continue` | `/socratic-continue <point>` gives a new idea or objection to the debaters from the last `/socratic` run in this session and translates the outcome again. |
+| `skills/socratic-continue` | `/socratic-continue <point>` gives a new idea or objection to the debaters from the last `/socratic` run and translates the outcome again. In a later session it rebuilds them from the run's log. |
 
-The plugin is standalone. It reads no project state and writes no files.
+The plugin is standalone. It reads no project state. The only files it writes are its debate
+logs, one directory per run under `~/.socratic/runs/`: the plan in `debate.md` and each
+debater's message per round in `rounds/`.
+
+In Claude Code, the debaters run as background agents and can't stop to ask for permission, so
+let them write the log without a prompt. Add this to `~/.claude/settings.json`:
+
+```json
+{ "permissions": { "allow": ["Edit(~/.socratic/**)"] } }
+```
+
+Without it, the moderator writes the log itself, or carries on without one.
 
 ## Install
 
@@ -62,7 +73,7 @@ debate ends.
 >
 > **Outcome:** consensus after 2 clash rounds, 2 agents, advocacy.
 >
-> ▸ Transcript (raw exchange, folded)
+> **Log:** ~/.socratic/runs/2026-10-02-postgres-vs-redis-queue/
 
 Without consensus, you'd get each camp's case, the point they couldn't get past, what would
 settle it, and the moderator's marked lean.
