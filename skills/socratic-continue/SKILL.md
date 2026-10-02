@@ -102,7 +102,8 @@ such. The skill is **re-invocable**: the user can `/socratic-continue` again wit
 ## 5. Re-synthesize — lead with the delta
 
 Translate the dense outcome into relaxed, plain-language prose. Because this is a continuation, the
-first thing the human wants is **what the new point changed**:
+first thing the human wants is **what the new point changed**. Everything above the outcome tag
+stays within **150 words** on consensus and **250 words** without it.
 
 - **Did it move the needle?** State plainly whether the new point shifted any position, moved a debater between camps, broke a
   prior wash, forced a concession, or left the earlier outcome standing. If it changed nothing,

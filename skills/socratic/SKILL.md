@@ -276,6 +276,10 @@ debate hinged on a **definition** — a disagreement that dissolved, forked, or 
 term was pinned — say so plainly and early; a resolved equivocation is usually the single most
 useful thing the human can take away.
 
+**Length cap.** On consensus, Verdict + Pro + Contra together stay within **150 words**. On no
+consensus, the four parts stay within **250 words**. The outcome tag and transcript don't count.
+When it won't fit, cut the weaker arguments, never the caveats.
+
 **On consensus — show only these three:**
 - **Verdict** — one or two sentences: what won, and why it was a **decisive** victory (the clash
   it survived, not just "all agreed"). If the dispute dissolved on a pinned definition, say so
