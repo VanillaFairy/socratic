@@ -35,6 +35,17 @@ it too.
 
 State the question to yourself in one sentence; that exact sentence seeds every debater.
 
+**Gate — is a debate worth it?** A debate costs N agents for several rounds. Check the question
+against these four:
+1. **A real choice** — something is being decided, not looked up.
+2. **Not settled by checking** — no test, doc, measurement or search answers it outright.
+3. **Contested** — informed people could land on different answers.
+4. **Costly to get wrong** — hard to reverse, or a lot rides on it.
+
+If any check fails, lead the plan card with which one and the cheaper route (answer directly, run
+the check), and ask whether to debate anyway. The user's call stands; `--yes` does not skip a
+failed gate.
+
 ## 2. Pick N and differentiate the debaters — the anti-collapse rule
 
 **Samples from the same model on the same prompt collapse to the same answer.** Independence
@@ -87,7 +98,7 @@ the frame before spending on it, in plain language:
 - **Cost** — N debaters for up to 6 clash rounds.
 
 Then wait. On a go, spawn. On edits, apply them, recheck that every stance still differs from
-every other, and show the card again. With `--yes`, skip the card and spawn.
+every other, and show the card again. With `--yes` and a passed gate (§1), skip the card and spawn.
 
 ## 3. The debater brief (shared body + a per-debater STANCE)
 
