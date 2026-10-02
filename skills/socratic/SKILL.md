@@ -213,12 +213,26 @@ Once a stop condition fires, list the **load-bearing** claims: the ones the verd
 case, would fall without. Send each load-bearing `ARG[F]` to a debater other than its author,
 preferably from the opposing camp, in one private `SendMessage` per debater, all in one message:
 `CLOSING. Check each claim below at its cited source. Reply VERIFIED: or REFUTED: per claim, with
-the evidence.` Skip the round if there is nothing to check.
+the evidence.`
+
+On **consensus**, every debater's closing message also carries a blind ballot, which no other
+debater ever sees: `BALLOT. Answer alone: CONF: 0–10 in the shared POS. DOUBT: the strongest
+argument against it you still find credible, or NONE.` Skip the closing round only when there is
+neither a fact to check nor a consensus to ballot.
 
 A refuted load-bearing claim reopens the debate: if under the cap, inject the refutation as a
 moderator turn and relay another round. At the cap, report it in the synthesis. Load-bearing
 `ARG[I]` and `ARG[A]` lines are not checked here; they go into the synthesis as what the outcome
 rests on.
+
+Then check the consensus for **correlated bias**. Debaters of one model share blind spots, so their
+agreement can be one error held N times:
+- A ballot with `CONF:` ≤ 5, or a `DOUBT:` the debate never rebutted, means the consensus was
+  social, not earned. Under the cap, inject the doubt unattributed as a moderator turn and relay
+  another round. At the cap, report the outcome as no consensus and show the doubt.
+- A premise every debater relied on and none ever challenged (the same `ARG[I]` or `ARG[A]` on
+  every side, never met by an `OBJ@` or `ASK@`) is untested, not settled. Name it in the synthesis
+  as an untested shared premise.
 
 ## 7. Cleanup
 
@@ -240,7 +254,7 @@ useful thing the human can take away.
   `ARG` lines).
 - **Contra** — the real caveats, risks, and conceded weaknesses that survived the clash — go in
   with eyes open, not a hedge. Name every load-bearing assumption (`ARG[A]`) the verdict rests on,
-  and any load-bearing fact the closing round refuted.
+  any load-bearing fact the closing round refuted, and any untested shared premise.
 
 No other headings in the consensus case — the verdict carries the reasoning, pro/contra carries
 the evidence. Don't restate the recommendation separately from the verdict.
