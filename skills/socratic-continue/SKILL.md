@@ -105,6 +105,8 @@ new advances, stop.
 Once a stop condition fires, run the closing round of `socratic` §6 on the load-bearing claims this
 continuation introduced or changed. Claims verified in an earlier run stay verified.
 
+Run the ledger of `socratic` §5 after every round with `--cap <injection round + 4>`.
+
 **Continuation cap: ≤ 4 clash rounds per injection** (a single new idea rarely needs more; a full
 debate is what `socratic` is for). Reaching the cap is a *no-consensus* outcome — report it as
 such. The skill is **re-invocable**: the user can `/socratic-continue` again with the next bone.

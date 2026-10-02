@@ -179,6 +179,7 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 >   resolved, a definition to ratify, a scope to pin down. Expect a direct answer next turn, and
 >   answer every `ASK@` aimed at you or at `all`; a dropped `ASK@` is as much a lapse as a dropped
 >   `OBJ@`.
+> - `ANS@:` your answer to the target's `ASK@`, named by the asker (`ANS@alpha:`).
 > - `REVISE:` how your own POS changed (state the delta).
 > - `CRUX@:` the core disagreement between you and the target, if nameable.
 > - `HOLD:` "no new argument this turn; my prior POS/OBJ stands." Use **only** when genuinely
@@ -192,7 +193,7 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 > **Each later round:** read every other analyst's latest message. First reconcile
 > vocabulary — where anyone's `DEF:` differs from yours on a load-bearing term, resolve THAT before
 > the substance (via `ASK@`/`DEF:`), because much of the apparent disagreement may live there. Then
-> answer every `ASK@` aimed at you, `CONCEDE@` what's right, `OBJ@` the weakest link — spend your
+> `ANS@` every `ASK@` aimed at you, `CONCEDE@` what's right, `OBJ@` the weakest link — spend your
 > objections on the positions furthest from yours rather than spreading one across everyone —
 > `REVISE:` your POS if it moved, restate `POS:`. If nothing new: `HOLD:`.
 
@@ -228,6 +229,16 @@ never declare consensus or stall while a direct question hangs unanswered.
 
 You are neutral (never a debater), so judging these does not break "no actor grades their own
 work." Read the tags, then confirm the *meaning*, not just the words.
+
+**Count with the ledger, judge the meaning yourself.** After every round, run
+`node <this skill's base directory>/scripts/ledger.mjs <run dir>`. It reads the round files and
+prints, as JSON: the round and whether the cap is reached, each debater's `POS:`, who wrote `HOLD:`,
+how many new claims each raised (`exhausted` when none did), exact repeats of earlier claims, open
+`ASK@`s with the debaters they still wait on, and the `ARG[F]` and `ARG[A]` lists for the closing
+round. Those counts are facts; don't recount them by eye. What they can't see is yours: a
+paraphrased repeat is a loop the ledger misses, a new-looking line can restate an old claim, and
+matching `POS:` words can hide different reasons. Without `node`, or without a log, keep the same
+tally by hand.
 
 - **Consensus — unanimity only.** Every `POS:` asserts the **same recommendation for the same core
   reasons**, and no debater holds an open, unrebutted `OBJ@` or an open, unanswered `ASK@`. A

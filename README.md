@@ -14,14 +14,21 @@ The plugin is standalone. It reads no project state. The only files it writes ar
 logs, one directory per run under `~/.socratic/runs/`: the plan in `debate.md` and each
 debater's message per round in `rounds/`.
 
+After each round the moderator runs `scripts/ledger.mjs` (Node, no dependencies) over the log. It
+counts what the stop conditions need, such as new claims, repeats and unanswered questions, so the
+moderator judges meaning instead of tallying by eye.
+
 In Claude Code, the debaters run as background agents and can't stop to ask for permission, so
-let them write the log without a prompt. Add this to `~/.claude/settings.json`:
+let them write the log without a prompt, and let the moderator run the ledger. Add this to
+`~/.claude/settings.json`:
 
 ```json
-{ "permissions": { "allow": ["Edit(~/.socratic/**)"] } }
+{ "permissions": { "allow": ["Edit(~/.socratic/**)", "Bash(node *ledger.mjs *)"] } }
 ```
 
-Without it, the moderator writes the log itself, or carries on without one.
+Without the first rule, the moderator writes the log itself, or carries on without one.
+
+The ledger's tests run with `node --test test/ledger.test.mjs`.
 
 ## Install
 
