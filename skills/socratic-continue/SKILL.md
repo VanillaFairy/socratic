@@ -87,7 +87,7 @@ latest message of every *other* debater, each block headed by its sender's name.
 message; concurrent. Collect every reply before judging.
 
 After **every** round, evaluate the stop conditions from `socratic` §5 — **consensus** (unanimity only),
-**stall** (every debater `HOLD:` in the same round), **loop** (a rebutted claim re-raised unchanged) — reading the tags then
+**stall** (every debater `HOLD:` in the same round), **exhausted** (a round adds nothing new), **loop** (a rebutted claim re-raised unchanged) — reading the tags then
 confirming the *meaning*, not just the words. A fresh point legitimately reopens a prior
 stalemate; that is the whole intent — but the moment the new point is fully metabolized and nothing
 new advances, stop.
@@ -114,7 +114,7 @@ first thing the human wants is **what the new point changed**:
   point.
 - **My tie-breaking lean** — on no consensus, your own adjudicated call, clearly marked as the
   moderator breaking the tie, never a fabricated agreement.
-- **Outcome tag** — how this continuation ended (`consensus` / `stall` / `loop` / `cap`), the
+- **Outcome tag** — how this continuation ended (`consensus` / `stall` / `exhausted` / `loop` / `cap`), the
   number of continuation rounds, N, and a note that it was a `continuation` of the prior run.
 - **Transcript** — the raw dense exchange for this continuation, folded at the end, untranslated.
   Offer to expand on request.

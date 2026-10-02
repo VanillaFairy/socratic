@@ -199,6 +199,9 @@ work." Read the tags, then confirm the *meaning*, not just the words.
   different options converging on the *same* one is an especially strong result — the losing
   sides' own champions couldn't sustain them — but still requires that real clash round.
 - **Stall** — every debater emits `HOLD:` in the same round: still disagreeing, nobody advancing.
+- **Exhausted** — a clash round adds nothing new: no debater raises an `ARG`, `OBJ@`, `ASK@`,
+  `DEF:` or `CRUX@` that wasn't already on the table, only restatements. It is a stall the
+  debaters didn't announce with `HOLD:`, and it ends the debate the same way.
 - **Loop** — an `OBJ@` or `ARG` reappears that was already rebutted, re-raised unchanged. Track
   distinct claims across rounds; a repeat with no new content is a loop.
 - **Hard cap** — round index reaches **6**. A guaranteed backstop. Reaching the cap is a
@@ -242,7 +245,7 @@ useful thing the human can take away.
 No other headings in the consensus case — the verdict carries the reasoning, pro/contra carries
 the evidence. Don't restate the recommendation separately from the verdict.
 
-**On no consensus (stall / loop / cap):**
+**On no consensus (stall / exhausted / loop / cap):**
 - **The camps** — group debaters by final `POS:`. For each surviving position: what it is, who
   holds it, and its strongest surviving `ARG`, stated fairly. Note any debater who abandoned its
   starting stance and where it went.
@@ -255,7 +258,7 @@ the evidence. Don't restate the recommendation separately from the verdict.
   breaking the tie, *not* a fabricated agreement. One or two sentences of reasoning.
 
 **Always end with:**
-- **Outcome tag** — how it ended (`consensus` / `stall` / `loop` / `cap`), round count, N, and the
+- **Outcome tag** — how it ended (`consensus` / `stall` / `exhausted` / `loop` / `cap`), round count, N, and the
   divergence mechanism used (`advocacy` / `lenses`). Name any options dropped by the N ≤ 5 cap.
 - **Transcript** — the raw dense exchange, folded/collapsed at the end for audit, **untranslated**
   (translating it back would spend the tokens the density just saved). Offer to expand on request.
