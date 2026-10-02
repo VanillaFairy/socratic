@@ -30,7 +30,8 @@ question the user is asking. If it's genuinely ambiguous *what* is being decided
 proceed. Do not debate a moving target.
 
 A `--n K` flag in the argument (2 ≤ K ≤ 5) fixes the number of debaters; strip it from the
-question. Without it, you pick N in §2.
+question. Without it, you pick N in §2. A `--yes` flag skips the plan card at the end of §2; strip
+it too.
 
 State the question to yourself in one sentence; that exact sentence seeds every debater.
 
@@ -77,6 +78,16 @@ collision; you are never an advocate.
 **Cost scales with N.** Each round is N agent turns, and each turn reads the other N−1 debaters'
 messages, so a round costs roughly N² in relayed tokens. Don't raise N for its own sake; a third
 debater must bring a stance the first two cannot.
+
+**Plan card — confirm before spawning.** A debate framed wrong is wasted whole, so show the user
+the frame before spending on it, in plain language:
+- **Question** — your one-sentence statement of it.
+- **Debaters** — the mechanism (`advocacy` / `lenses`), then one line per debater: its name, its
+  option or lens, and its model when models differ.
+- **Cost** — N debaters for up to 6 clash rounds.
+
+Then wait. On a go, spawn. On edits, apply them, recheck that every stance still differs from
+every other, and show the card again. With `--yes`, skip the card and spawn.
 
 ## 3. The debater brief (shared body + a per-debater STANCE)
 
