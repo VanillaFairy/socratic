@@ -7,7 +7,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const TAG = /^\s*(POS|ARG|OBJ|CONCEDE|DEF|ASK|ANS|REVISE|CRUX|HOLD)(?:\[([FIA])\])?(?:@([A-Za-z-]+))?\s*:\s*(.*)$/;
+// Tolerates a leading list marker or quote and bold around the tag: `- POS:`, `**ARG[F]:**`.
+const TAG = /^[\s>*-]*(POS|ARG|OBJ|CONCEDE|DEF|ASK|ANS|REVISE|CRUX|HOLD)(?:\[([FIA])\])?(?:@([A-Za-z-]+))?(?:\*\*)?\s*:(?:\*\*)?\s*(.*)$/;
 const CLAIM_KINDS = new Set(['ARG', 'OBJ', 'ASK', 'DEF', 'CRUX']);
 const FILE = /^(\d{2})-([a-z]+)\.txt$/;
 
@@ -20,7 +21,7 @@ export function parseMessage(text) {
     if (!raw.trim() || /^\s*ROUND\b/.test(raw)) continue;
     const m = TAG.exec(raw);
     if (!m) { untagged++; continue; }
-    lines.push({ kind: m[1], provenance: m[2] ?? null, target: m[3] ?? null, text: m[4].trim() });
+    lines.push({ kind: m[1], provenance: m[2] ?? null, target: m[3]?.toLowerCase() ?? null, text: m[4].trim() });
   }
   return { lines, untagged };
 }
@@ -51,14 +52,26 @@ export function ledger(messages, cap = 6) {
   }
   const totalNew = Object.values(newClaims).reduce((a, b) => a + b, 0);
 
+  // Each ANS@<asker> line answers one ASK: the earliest open one its author owes that asker.
+  const answers = new Map();
+  for (const m of parsed) for (const l of m.lines) {
+    if (l.kind !== 'ANS') continue;
+    const key = `${m.name}>${l.target}`;
+    answers.set(key, [...(answers.get(key) ?? []), m.round]);
+  }
   const openAsks = [];
   for (const m of parsed) {
     for (const line of m.lines.filter((l) => l.kind === 'ASK')) {
       const targets = line.target === 'all' || line.target === null
         ? debaters.filter((d) => d !== m.name)
         : debaters.filter((d) => d === line.target);
-      const waitingOn = targets.filter((t) => !parsed.some((r) =>
-        r.name === t && r.round > m.round && r.lines.some((l) => l.kind === 'ANS' && l.target === m.name)));
+      const waitingOn = targets.filter((t) => {
+        const rounds = answers.get(`${t}>${m.name}`) ?? [];
+        const i = rounds.findIndex((r) => r > m.round);
+        if (i === -1) return true;
+        rounds.splice(i, 1);
+        return false;
+      });
       if (waitingOn.length) openAsks.push({ from: m.name, to: line.target, round: m.round, text: line.text, waitingOn });
     }
   }
@@ -109,5 +122,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error('usage: node ledger.mjs <run-dir> [--cap <round>]');
     process.exit(2);
   }
-  console.log(JSON.stringify(ledger(readRun(runDir), cap), null, 2));
+  try {
+    console.log(JSON.stringify(ledger(readRun(runDir), cap), null, 2));
+  } catch (err) {
+    console.error(`ledger: ${err.code === 'ENOENT' ? `no rounds/ directory in ${runDir}` : err.message}`);
+    process.exit(1);
+  }
 }

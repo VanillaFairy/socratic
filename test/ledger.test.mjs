@@ -17,6 +17,27 @@ test('an ASK stays open until its target answers the asker in a later round', ()
   assert.deepEqual(ledger([ask, sameRound, msg(1, 'alpha', 'POS: x'), answered]).openAsks, []);
 });
 
+test('one ANS answers one ASK, so a second question to the same debater stays open', () => {
+  const r = ledger([
+    msg(0, 'alpha', 'POS: x', 'ASK@beta: scope?', 'ASK@beta: durable?'),
+    msg(0, 'beta', 'POS: y'),
+    msg(1, 'alpha', 'POS: x'),
+    msg(1, 'beta', 'POS: y', 'ANS@alpha: narrow'),
+  ]);
+  assert.deepEqual(r.openAsks.map((a) => a.text), ['durable?']);
+});
+
+test('targets match whatever their case, and tags survive list markers and bold', () => {
+  const r = ledger([
+    msg(0, 'alpha', '- **POS:** x', '**ARG[F]:** pg ok', 'ASK@Beta: scope?'),
+    msg(0, 'beta', 'POS: y'),
+  ]);
+  assert.equal(r.positions.alpha, 'x');
+  assert.equal(r.facts.length, 1);
+  assert.deepEqual(r.openAsks.map((a) => a.waitingOn), [['beta']]);
+  assert.deepEqual(r.untagged, { alpha: 0, beta: 0 });
+});
+
 test('an ASK@all waits on every other live debater', () => {
   const r = ledger([
     msg(0, 'alpha', 'POS: x', 'ASK@all: scope?'),

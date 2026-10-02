@@ -181,7 +181,7 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 >   resolved, a definition to ratify, a scope to pin down. Expect a direct answer next turn, and
 >   answer every `ASK@` aimed at you or at `all`; a dropped `ASK@` is as much a lapse as a dropped
 >   `OBJ@`.
-> - `ANS@:` your answer to the target's `ASK@`, named by the asker (`ANS@alpha:`).
+> - `ANS@:` your answer to the target's `ASK@`, named by the asker (`ANS@alpha:`), one line per question.
 > - `REVISE:` how your own POS changed (state the delta).
 > - `CRUX@:` the core disagreement between you and the target, if nameable.
 > - `HOLD:` "no new argument this turn; my prior POS/OBJ stands." Use **only** when genuinely
