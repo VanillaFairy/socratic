@@ -55,7 +55,7 @@ exact handles; a debater that failed earlier stays out.
 **If you cannot** — no `socratic` debate ran earlier in this session, or the handles are
 unrecoverable — **stop and say so plainly**, then offer to start a fresh `/socratic` on the
 question instead. Never silently spin up new agents and pass it off as a continuation (that is
-a fabricated debate — see §5 and `socratic` §8).
+a fabricated debate — see §5 and `socratic` §9).
 
 A resumed background agent that has gone idle is still reachable: `SendMessage` resumes it **from
 its transcript** with full prior context. "Idle" ≠ "gone." Only a genuinely lost handle (or a new
@@ -92,6 +92,9 @@ confirming the *meaning*, not just the words. A fresh point legitimately reopens
 stalemate; that is the whole intent — but the moment the new point is fully metabolized and nothing
 new advances, stop.
 
+Once a stop condition fires, run the closing round of `socratic` §6 on the load-bearing claims this
+continuation introduced or changed. Claims verified in an earlier run stay verified.
+
 **Continuation cap: ≤ 4 clash rounds per injection** (a single new idea rarely needs more; a full
 debate is what `socratic` is for). Reaching the cap is a *no-consensus* outcome — report it as
 such. The skill is **re-invocable**: the user can `/socratic-continue` again with the next bone.
@@ -106,7 +109,7 @@ first thing the human wants is **what the new point changed**:
   say so — a new idea that fails to move a battle-tested debate is itself a real result.
 - **Updated recommendation / crux** — the current bottom line after the injection: the new agreed
   answer (on consensus), or the camps with their `POS:` lines and the sharpened crux between each
-  pair of camps (on no consensus), stated fairly — same shape as `socratic` §7.
+  pair of camps (on no consensus), stated fairly — same shape as `socratic` §8.
 - **New concessions & tradeoffs** — anything any debater granted or flagged in response to the
   point.
 - **My tie-breaking lean** — on no consensus, your own adjudicated call, clearly marked as the
@@ -118,7 +121,7 @@ first thing the human wants is **what the new point changed**:
 
 ## 6. Cleanup
 
-**Leave the debaters resumable.** Unlike `socratic` §6, do **not** try to tear the agents down —
+**Leave the debaters resumable.** Unlike `socratic` §7, do **not** try to tear the agents down —
 the user will likely want to `/socratic-continue` again with another idea. Idle-but-resumable is
 the desired end state. (They cost nothing while idle and evaporate with the session anyway.)
 

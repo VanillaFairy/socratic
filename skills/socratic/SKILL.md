@@ -132,7 +132,9 @@ and `STANCE` fills**, which you set per debater per §2:
 > `@<name>` for one analyst (e.g. `OBJ@gamma:`), `@all` for everyone.
 > - `POS:` your current bottom-line recommendation. **Restate every turn** (even if unchanged) so
 >   convergence is visible. Under advocacy this may honestly flip against your assigned side.
-> - `ARG:` a supporting argument / evidence (cite `path:line` when code-based).
+> - `ARG[F]:` / `ARG[I]:` / `ARG[A]:` a supporting argument, tagged by provenance. `F` = fact,
+>   checkable at a source you cite (`path:line`, a doc, a measurement). `I` = inference you drew
+>   from facts. `A` = assumption you did not check. Never tag a claim `F` that you did not check.
 > - `OBJ@:` an objection to a specific claim of the target.
 > - `CONCEDE@:` a point you grant the target.
 > - `DEF:` a definition — your operative meaning for a key term, or a proposed shared definition
@@ -149,7 +151,7 @@ and `STANCE` fills**, which you set per debater per §2:
 >
 > **Round 0:** you do NOT know the other analysts' messages. Open per your STANCE — advocacy: the
 > strongest honest case for your assigned option; lens: your genuine best answer through your lens.
-> `POS:` + `ARG:` lines — **plus a `DEF:` line for every key term** in the question whose meaning
+> `POS:` + `ARG[F|I|A]:` lines — **plus a `DEF:` line for every key term** in the question whose meaning
 > could be contested, and an `ASK@all:` for any term you already suspect is equivocal. Fixing the
 > vocabulary is the first order of business, before the clash.
 > **Each later round:** you receive every other analyst's latest message. First reconcile
@@ -197,17 +199,30 @@ work." Read the tags, then confirm the *meaning*, not just the words.
   different options converging on the *same* one is an especially strong result — the losing
   sides' own champions couldn't sustain them — but still requires that real clash round.
 - **Stall** — every debater emits `HOLD:` in the same round: still disagreeing, nobody advancing.
-- **Loop** — an `OBJ@` or `ARG:` reappears that was already rebutted, re-raised unchanged. Track
+- **Loop** — an `OBJ@` or `ARG` reappears that was already rebutted, re-raised unchanged. Track
   distinct claims across rounds; a repeat with no new content is a loop.
 - **Hard cap** — round index reaches **6**. A guaranteed backstop. Reaching the cap is a
   *no-consensus* outcome; report it as such, never as agreement.
 
-## 6. Cleanup
+## 6. Closing round — verify what the outcome rests on
 
-Once a stop condition fires, `TaskStop` **every** debater (by its spawn id) so none lingers. Then
-synthesize.
+Once a stop condition fires, list the **load-bearing** claims: the ones the verdict, or a camp's
+case, would fall without. Send each load-bearing `ARG[F]` to a debater other than its author,
+preferably from the opposing camp, in one private `SendMessage` per debater, all in one message:
+`CLOSING. Check each claim below at its cited source. Reply VERIFIED: or REFUTED: per claim, with
+the evidence.` Skip the round if there is nothing to check.
 
-## 7. Synthesize the response (the only human-readable step)
+A refuted load-bearing claim reopens the debate: if under the cap, inject the refutation as a
+moderator turn and relay another round. At the cap, report it in the synthesis. Load-bearing
+`ARG[I]` and `ARG[A]` lines are not checked here; they go into the synthesis as what the outcome
+rests on.
+
+## 7. Cleanup
+
+Once the closing round is done, `TaskStop` **every** debater (by its spawn id) so none lingers.
+Then synthesize.
+
+## 8. Synthesize the response (the only human-readable step)
 
 Translate the dense outcome into relaxed, plain-language prose. Lead with the bottom line. If the
 debate hinged on a **definition** — a disagreement that dissolved, forked, or narrowed once a key
@@ -219,16 +234,17 @@ useful thing the human can take away.
   it survived, not just "all agreed"). If the dispute dissolved on a pinned definition, say so
   here — that's usually the decisive fact.
 - **Pro** — the strongest surviving arguments for the winning answer (translate the surviving
-  `ARG:` lines).
+  `ARG` lines).
 - **Contra** — the real caveats, risks, and conceded weaknesses that survived the clash — go in
-  with eyes open, not a hedge.
+  with eyes open, not a hedge. Name every load-bearing assumption (`ARG[A]`) the verdict rests on,
+  and any load-bearing fact the closing round refuted.
 
 No other headings in the consensus case — the verdict carries the reasoning, pro/contra carries
 the evidence. Don't restate the recommendation separately from the verdict.
 
 **On no consensus (stall / loop / cap):**
 - **The camps** — group debaters by final `POS:`. For each surviving position: what it is, who
-  holds it, and its strongest surviving `ARG:`, stated fairly. Note any debater who abandoned its
+  holds it, and its strongest surviving `ARG`, stated fairly. Note any debater who abandoned its
   starting stance and where it went.
 - **The crux** — the disagreement each pair of camps could not resolve (their `CRUX@`), stated
   plainly. Two camps have one crux; three camps may have up to three.
@@ -244,7 +260,7 @@ the evidence. Don't restate the recommendation separately from the verdict.
 - **Transcript** — the raw dense exchange, folded/collapsed at the end for audit, **untranslated**
   (translating it back would spend the tokens the density just saved). Offer to expand on request.
 
-## 8. Failure handling
+## 9. Failure handling
 
 - **A debater returns nothing / dies** — resend once (`SendMessage`, or re-spawn with its own
   prior `POS:` + STANCE + the transcript so far so continuity and differentiation are preserved).
