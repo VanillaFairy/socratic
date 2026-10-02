@@ -62,8 +62,8 @@ one, and the continuation's result is appended to the same `debate.md` under
 unrecoverable, or the user names an older run. Take the newest run under `<home>/.socratic/runs/`
 unless the user names one. Re-spawn each debater listed in `debate.md`, except those it records
 as failed, exactly as `socratic` §3 spawns it, with the same brief, STANCE, model and `{{RUN}}`.
-Its spawn message is the injection of §3 with one line added after `ROUND <RR>`: `REBUILT. All
-earlier rounds are in {{RUN}}/rounds/. Read every one, then answer the new point below as the
+Its spawn message is the injection of §3 with one line added after `ROUND <RR>`: `REBUILT. This
+message names every file in {{RUN}}/rounds/: list and read them all, then answer the new point below as the
 analyst you were.` Announce it as a rebuilt continuation, not a resumed one.
 
 **If there is no log either**, **stop and say so plainly**, then offer to start a fresh
@@ -72,7 +72,9 @@ continuation (that is a fabricated debate — see §5 and `socratic` §9).
 
 A background agent that has gone idle, or that `socratic` §7 stopped, may still resume from its
 transcript on `SendMessage`. Try it. If any debater's handle doesn't resume, rebuild the whole
-panel from the log rather than mix live and rebuilt debaters.
+panel from the log rather than mix live and rebuilt debaters. On a partial resume, the rebuilt
+panel gets the same `ROUND <RR>` and overwrites the files the resumed debaters wrote, and those
+handles get no further messages.
 
 ## 3. Inject the new point as a moderator turn
 
@@ -148,7 +150,7 @@ the desired end state. (They cost nothing while idle and evaporate with the sess
   why: no `socratic` run happened here, and no run directory exists), then offer a fresh
   `/socratic`.
 - **A debater returns nothing / dies on resume** — resend once. If it still fails, continue with
-  the surviving debaters and **say so** in the synthesis; if only one survives, report its view as a
+  the surviving debaters, mark it failed in `debate.md`, and **say so** in the synthesis; if only one survives, report its view as a
   single voice. A thinned continuation is honest; a faked full one is not.
 - **Never fabricate consensus or a debate.** If the continuation stalls, loops, or caps, report
   exactly that.
