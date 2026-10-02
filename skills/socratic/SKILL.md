@@ -1,6 +1,6 @@
 ---
 name: socratic
-description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED same-model debaters — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, or loop, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and writes no artifacts.
+description: Use when the user invokes /socratic, or explicitly asks to stress-test a decision or design question through an adversarial debate between agents. Spawns 2–5 DELIBERATELY DIFFERENTIATED debaters (one model, or mixed model families where the host offers them) — one advocate per real option, or distinct lenses for open questions — that argue in dense machine-shorthand, pinning contested terminology first (equivocation is the root of ~95% of failed arguments) and raising clarifying questions to each other in gray areas, until unanimous consensus, stall, or loop, then translates the outcome into a human-readable recommendation. Standalone; reads no project state and writes no artifacts.
 ---
 
 # socratic — adversarial debate as a decision aid
@@ -60,6 +60,14 @@ Whichever you pick, the seeds must be **pairwise materially different** — ever
 option or lens differs from every other debater's. **Never spawn two debaters with the same
 stance.** A lens that is a mild variant of another lens is the same stance.
 
+**Mix model families when the host allows it.** Different stances on one model still share that
+model's blind spots; debaters from different model families don't. If the host lets you pick each
+subagent's model and offers more than one family (Cursor does, for example), give the debaters
+different families, strongest models first. Model diversity adds to stance differentiation and
+never replaces it. Sizes of one family don't count, and a weaker model only argues worse. Claude
+Code offers Claude models alone, so there you omit the `model` override and every debater runs
+your model.
+
 **Truth-seeking overrides advocacy.** An assigned advocate is not a sophist: make the strongest
 *honest* case, concede where another side genuinely wins, and if your assigned option is clearly
 the worse choice, say so plainly and let your `POS:` reflect it. The clash exists to surface the
@@ -74,8 +82,8 @@ debater must bring a stance the first two cannot.
 
 Name the debaters in order `socratic-alpha`, `socratic-beta`, `socratic-gamma`, `socratic-delta`,
 `socratic-epsilon`, taking the first N. Spawn each with the `Agent` tool,
-`subagent_type: "general-purpose"`, **omitting the `model` override** (so each inherits your model
-— "same model as the moderator"), its stable `name`, and `run_in_background: true` so it can be
+`subagent_type: "general-purpose"`, its model per §2 (the `model` override omitted when the host
+offers one family, so each inherits yours), its stable `name`, and `run_in_background: true` so it can be
 resumed via `SendMessage`. The brief below is shared **except the `{{N}}`, `{{SELF}}`, `{{OTHERS}}`
 and `STANCE` fills**, which you set per debater per §2:
 
@@ -164,7 +172,7 @@ and `STANCE` fills**, which you set per debater per §2:
 ## 4. Run the debate loop
 
 **Round 0 — differentiated & independent.** In a single message, spawn all N debaters
-(background, named, model omitted), each with the one-sentence question + the brief + **its own**
+(background, named, model per §2), each with the one-sentence question + the brief + **its own**
 fills. None sees another. Collect every opening message.
 
 **Rounds 1..R — clash.** Each round, send each debater **one** `SendMessage` bundling the latest
@@ -273,7 +281,8 @@ the evidence. Don't restate the recommendation separately from the verdict.
 
 **Always end with:**
 - **Outcome tag** — how it ended (`consensus` / `stall` / `exhausted` / `loop` / `cap`), round count, N, and the
-  divergence mechanism used (`advocacy` / `lenses`). Name any options dropped by the N ≤ 5 cap.
+  divergence mechanism used (`advocacy` / `lenses`). Name any options dropped by the N ≤ 5 cap,
+  and each debater's model when they differ.
 - **Transcript** — the raw dense exchange, folded/collapsed at the end for audit, **untranslated**
   (translating it back would spend the tokens the density just saved). Offer to expand on request.
 
@@ -290,9 +299,9 @@ the evidence. Don't restate the recommendation separately from the verdict.
 
 ## Notes
 
-- Debaters inherit **your** model (`model` override omitted) — "N agents of the same model as the
-  moderator." That is exactly why §2 exists: same model + same prompt = collapse, so every stance
-  must be engineered apart from every other.
+- In Claude Code, debaters inherit **your** model, so they are N agents of one model. That is
+  exactly why §2 exists: same model + same prompt = collapse, so every stance must be engineered
+  apart from every other. Mixed model families, where a host offers them, help on top of that.
 - Density and stop-detection reinforce each other: the move tags cost almost nothing in tokens yet
   make consensus/stall/loop near-mechanical to read; the `@` targets keep an N-way exchange
   traceable.

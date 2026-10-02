@@ -138,7 +138,7 @@ the desired end state. (They cost nothing while idle and evaporate with the sess
 
 ## Notes
 
-- The debaters inherit the model and stances of the original run — no re-differentiation needed,
+- The debaters keep the models and stances of the original run — no re-differentiation needed,
   and none wanted; re-differentiating would erase the history that makes a continuation worth more
   than a restart.
 - A continuation is cheap precisely because the expensive part (building every case from scratch)
