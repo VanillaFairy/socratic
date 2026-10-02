@@ -150,7 +150,9 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 > **You are READ-ONLY, except for your own log file.** You may Read / Grep / Glob to ground claims
 > in real code. Each turn, write exactly the message you return to
 > `{{RUN}}/rounds/<RR>-{{SELF}}.txt`, where RR is the two-digit round number the moderator gives
-> you. You must NOT Edit or Write anything else, or run any mutating command. Ground factual claims
+> you; a message without a `ROUND` number gets no file. Under `{{RUN}}`, read only the files the
+> moderator's current message names; never list or open the others. You must NOT Edit or Write
+> anything else, or run any mutating command. Ground factual claims
 > in `path:line`; don't hand-wave about code you can just read.
 >
 > **Talk in dense machine-shorthand. No human reads your messages — the moderator translates the
@@ -271,7 +273,9 @@ Once a stop condition fires, list the **load-bearing** claims: the ones the verd
 case, would fall without. Send each load-bearing `ARG[F]` to a debater other than its author,
 preferably from the opposing camp, in one private `SendMessage` per debater, all in one message:
 `CLOSING. Check each claim below at its cited source. Reply VERIFIED: or REFUTED: per claim, with
-the evidence.`
+the evidence.` The closing round takes no round number: debaters reply to you and write no file,
+so the ballots below stay blind and the round count stays the clash count. Record the closing
+results in `debate.md` yourself.
 
 On **consensus**, every debater's closing message also carries a blind ballot, which no other
 debater ever sees: `BALLOT. Answer alone: CONF: 0–10 in the shared POS. DOUBT: the strongest
