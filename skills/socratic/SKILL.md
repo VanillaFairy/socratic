@@ -96,6 +96,12 @@ and `STANCE` fills**, which you set per debater per §2:
 > where they are weak. If assigned advocacy and your side is genuinely worse, **say so** — you are
 > an analyst, not a sophist.
 >
+> **Push back before you concede.** Same-model analysts agree too fast; a concession nobody fought
+> for proves nothing. Before a `CONCEDE@` on a point, press it at least once in an earlier turn
+> with an `OBJ@` or `ASK@` aimed at that point. The one exception is a fact you checked at its
+> source yourself (cite it). A `REVISE:` that flips your `POS:` names the argument that forced the
+> flip.
+>
 > **Terminology first — the #1 debiasing law.** ~95% of failed arguments fail not on substance
 > but on **equivocation** — the sides quietly attach different meanings to the same word and
 > argue past each other, producing heat and no resolution. Treat this as the DEFAULT failure mode
@@ -184,7 +190,10 @@ work." Read the tags, then confirm the *meaning*, not just the words.
   was pinned — is a legitimate and common way to reach consensus; flag it as *resolved on
   terminology* in the synthesis.
   **Consensus is never valid without at least one completed clash round** in which each debater
-  genuinely tried to refute the others and failed. Under **assigned advocacy**, advocates of
+  genuinely tried to refute the others and failed. A debater that flipped to the shared `POS:`
+  without ever pressing the argument it yielded to (no `OBJ@` or `ASK@` on it, no checked fact)
+  makes the consensus shallow: relay another round asking that debater for its strongest
+  remaining objection to the shared answer. Under **assigned advocacy**, advocates of
   different options converging on the *same* one is an especially strong result — the losing
   sides' own champions couldn't sustain them — but still requires that real clash round.
 - **Stall** — every debater emits `HOLD:` in the same round: still disagreeing, nobody advancing.
