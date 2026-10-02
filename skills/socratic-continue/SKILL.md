@@ -92,10 +92,9 @@ Send all in one message so they run concurrently. Collect **every** reply before
 
 ## 4. Run the continuation loop
 
-**Rounds — clash.** After the injection round, relay verbatim exactly as in `socratic` §4 (dense
-in, dense out — do not expand between debaters): each debater gets one `SendMessage` bundling the
-latest message of every *other* debater, each block headed by its sender's name. All in one
-message; concurrent. Collect every reply before judging.
+**Rounds — clash.** After the injection round, relay exactly as in `socratic` §4: each debater gets
+one short `SendMessage` pointing at every *other* debater's latest round file. All in one message;
+concurrent. Collect every reply before judging.
 
 After **every** round, evaluate the stop conditions from `socratic` §5 — **consensus** (unanimity only),
 **stall** (every debater `HOLD:` in the same round), **exhausted** (a round adds nothing new), **loop** (a rebutted claim re-raised unchanged) — reading the tags then

@@ -118,8 +118,8 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
   Form your own best answer from this vantage.`
 
 > You are **{{SELF}}**, one of **{{N}} analysts** debating a question to reach the **correct**
-> answer. The others — {{OTHERS}} — work the same question separately; each round you will be
-> shown their latest messages, labeled by sender, and they yours.
+> answer. The others — {{OTHERS}} — work the same question separately; each round you read
+> their latest messages from the log files the moderator names, and they yours.
 >
 > **STANCE (this is deliberately different from every other analyst — do not drift off it):**
 > {{STANCE}}
@@ -189,7 +189,7 @@ take the short names (`alpha`, `beta`, …), the same ones the `@` tags use:
 > `POS:` + `ARG[F|I|A]:` lines — **plus a `DEF:` line for every key term** in the question whose meaning
 > could be contested, and an `ASK@all:` for any term you already suspect is equivocal. Fixing the
 > vocabulary is the first order of business, before the clash.
-> **Each later round:** you receive every other analyst's latest message. First reconcile
+> **Each later round:** read every other analyst's latest message. First reconcile
 > vocabulary — where anyone's `DEF:` differs from yours on a load-bearing term, resolve THAT before
 > the substance (via `ASK@`/`DEF:`), because much of the apparent disagreement may live there. Then
 > answer every `ASK@` aimed at you, `CONCEDE@` what's right, `OBJ@` the weakest link — spend your
@@ -211,10 +211,13 @@ the synthesis to `debate.md`.
 (background, named, model per §2), each with the one-sentence question + the brief + **its own**
 fills. None sees another. Collect every opening message.
 
-**Rounds 1..R — clash.** Each round, send each debater **one** `SendMessage` bundling the latest
-message of every *other* debater, verbatim, each block headed by its sender's name (dense in, dense
-out — do **not** expand, summarize, or reorder between debaters). Send all N in one message; they
-run concurrently. Collect every reply before judging.
+**Rounds 1..R — clash.** Each round, send each debater **one** short `SendMessage` that points at
+the others' latest messages in the log instead of carrying them: `ROUND <RR>. Read
+{{RUN}}/rounds/<RR−1>-<name>.txt for each of: <every other debater's short name>. Then reply per
+protocol.` The files are the debaters' own words, so nothing is expanded, summarized or reordered
+on the way, and you don't retype N×(N−1) messages a round. If a debater's file is missing, paste
+that one message verbatim, headed by its sender's name. Send all N in one message; they run
+concurrently. Collect every reply before judging.
 
 After **every** round, evaluate the stop conditions (§5). Relay another round only if none fire
 **and** the round index is < 6. An open `ASK@` — a question or definition-proposal put to a
